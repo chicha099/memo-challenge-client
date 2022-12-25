@@ -223,7 +223,7 @@ export function updateSession(payload) {
 export function deleteSession(payload) {
   
   return function (dispatch) {
-    console.log(payload, "payload")
+   
     return axios
       .post(backendURL, {
         query: `

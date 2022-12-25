@@ -52,6 +52,7 @@
 .images {
   display: flex;
   column-gap: 5px;
+  justify-content: center;
   row-gap: 5px;
   margin: auto;
   flex-wrap: wrap;

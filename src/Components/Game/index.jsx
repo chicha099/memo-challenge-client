@@ -12,6 +12,7 @@ import {
 } from "../../Redux/actions";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
+import Nav from "../Nav";
 import { deleteSession } from "../../Redux/actions";
 import { areEqual } from "../../Helpers";
 import Loader from "../Loader";
@@ -39,7 +40,7 @@ const Game = () => {
   };
   useEffect(() => {
     dispatch(getMemoById(id));
-    console.log(selectedMemo, completedPairs, currentSession);
+    
   }, []);
 
   useEffect(() => {
@@ -63,7 +64,7 @@ const Game = () => {
       Math.floor((currentSession.numberOfPairs / currentSession.retries) * 100)
     );
     if (selectedMemo.images) {
-      console.log(completedPairs, selectedMemo);
+     
       if (
         completedPairs.length &&
         completedPairs.length === selectedMemo.images.length &&
@@ -91,11 +92,11 @@ const Game = () => {
       history.push("/");
     }
   };
-
   return (
     <div>
-      {selectedMemo.images ? (
+      {selectedMemo.images && (id === selectedMemo.id) ? (
         <div className="game">
+          <Nav></Nav>
           {completedMemo ? (
             <div className="modalSession">
               <div className="whiteModal">

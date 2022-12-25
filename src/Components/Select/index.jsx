@@ -12,23 +12,30 @@ import {
 import { Link } from "react-router-dom";
 import Loader from "../Loader";
 import Nav from "../Nav";
+import { useHistory } from "react-router-dom";
 
 const Select = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const allMemos = useSelector((state) => state.allMemos);
   useEffect(() => {
     dispatch(emptySelectedMemo());
     dispatch(getAllMemoTests());
   }, []);
+
   const handleDeleteMemo = (id) => {
-    dispatch(deleteMemo(id));
-    if (sessionStorage.getItem("sessionId")) {
-      dispatch(
-        deleteSession(JSON.parse(sessionStorage.getItem("sessionId")).id)
-      );
-      sessionStorage.removeItem("sessionId");
+    if (allMemos.length === 1) {
+      alert("At least one memo must be available");
+    } else {
+      dispatch(deleteMemo(id));
+      if (sessionStorage.getItem("sessionId")) {
+        dispatch(
+          deleteSession(JSON.parse(sessionStorage.getItem("sessionId")).id)
+        );
+        sessionStorage.removeItem("sessionId");
+      }
+      dispatch(getAllMemoTests());
     }
-    dispatch(getAllMemoTests());
   };
   return (
     <div>
@@ -45,7 +52,7 @@ const Select = () => {
                     </h2>
                     <div className="images">
                       {memo.images.slice(0, 4).map((image, index) => {
-                        if (index === 3) {
+                        if (index === 3 && memo.images.length > 4) {
                           return (
                             <div className="last-image">
                               <img src={image} alt="" />
@@ -69,13 +76,17 @@ const Select = () => {
                         }
                       >
                         EDIT
-                        <p className={
-                          sessionStorage.getItem("sessionId") &&
-                          JSON.parse(sessionStorage.getItem("sessionId"))
-                            .memoId == memo.id
-                            ? "no-edit"
-                            : "hidden"
-                        }>Edit not allowed session in progress</p>
+                        <p
+                          className={
+                            sessionStorage.getItem("sessionId") &&
+                            JSON.parse(sessionStorage.getItem("sessionId"))
+                              .memoId == memo.id
+                              ? "no-edit"
+                              : "hidden"
+                          }
+                        >
+                          Edit not allowed session in progress
+                        </p>
                       </Link>
                       <a onClick={() => handleDeleteMemo(memo.id)}>DELETE</a>
                       <Link to={`/game/${memo.id}`}>PLAY</Link>

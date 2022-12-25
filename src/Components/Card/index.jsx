@@ -9,6 +9,7 @@ import { useRef } from "react";
 const Card = (params) => {
   const dispatch = useDispatch();
   const completedPairs = useSelector((state) => state.completedPairs);
+  const selectedMemo = useSelector((state) => state.selectedMemo);
   const [completed, setCompleted] = useState(false);
   const activeCardRef = useRef(null);
   const totalCounter = useSelector((state) => state.totalCounter);
@@ -18,7 +19,7 @@ const Card = (params) => {
     dispatch(flipCard(params.id));
   };
   useEffect(() => {
-    if (completedPairs.includes(params.image)) {
+    if (completedPairs.includes(params.image)  && JSON.parse(sessionStorage.getItem("sessionId")).memoId === selectedMemo.id) {
       activeCardRef.current.classList.add("is-flipped");
       setCompleted(true);
     } else if (totalCounter > 0) {
@@ -30,7 +31,8 @@ const Card = (params) => {
     }
   }, [totalCounter]);
   useEffect(() => {
-    if (completedPairs.includes(params.image)) {
+    if (completedPairs.includes(params.image) && JSON.parse(sessionStorage.getItem("sessionId")).memoId === selectedMemo.id) {
+      
       activeCardRef.current.classList.add("is-flipped");
     }
   }, [completedPairs]);
