@@ -223,6 +223,7 @@ export function updateSession(payload) {
 export function deleteSession(payload) {
   
   return function (dispatch) {
+    console.log(payload, "payload")
     return axios
       .post(backendURL, {
         query: `
@@ -272,7 +273,6 @@ export function emptySelectedMemo() {
 }
 
 export function emptyCompletedPairs() {
-  console.log("empty completed pairs")
   return {
     type: "EMPTY_COMPLETED_PAIRS",
   };

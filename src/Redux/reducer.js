@@ -58,7 +58,6 @@ export default function rootReducer(state = initialState, action) {
         currentSession: action.payload.data.createGameSession,
       };
     case "GET_SESSION":
-      console.log(action.payload.data.gamesessions)
       return {
         ...state,
         currentSession: action.payload.data.gamesessions,

@@ -1,0 +1,12 @@
+.nav {
+   display: flex;
+  padding: 5px 0px 5px 30px;box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+  column-gap: 30px;
+  width: 100%;
+}
+
+.nav a {
+  color: rgb(0, 0, 0);
+  font-size: 20px;
+  text-decoration: none;
+}

@@ -2,8 +2,16 @@ import React, { useEffect } from "react";
 import "./select.css";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { getAllMemoTests, deleteMemo, deleteSession, emptySelectedMemo,emptyCompletedPairs } from "../../Redux/actions";
+import {
+  getAllMemoTests,
+  deleteMemo,
+  deleteSession,
+  emptySelectedMemo,
+  emptyCompletedPairs,
+} from "../../Redux/actions";
 import { Link } from "react-router-dom";
+import Loader from "../Loader";
+import Nav from "../Nav";
 
 const Select = () => {
   const dispatch = useDispatch();
@@ -11,36 +19,75 @@ const Select = () => {
   useEffect(() => {
     dispatch(emptySelectedMemo());
     dispatch(getAllMemoTests());
-
   }, []);
   const handleDeleteMemo = (id) => {
     dispatch(deleteMemo(id));
-    if(sessionStorage.getItem("sessionId")){
-      dispatch(deleteSession(JSON.parse(sessionStorage.getItem("sessionId")).id));
+    if (sessionStorage.getItem("sessionId")) {
+      dispatch(
+        deleteSession(JSON.parse(sessionStorage.getItem("sessionId")).id)
+      );
       sessionStorage.removeItem("sessionId");
     }
     dispatch(getAllMemoTests());
   };
   return (
-    <div className="select">
-      <div className="memos">
-        {allMemos.length > 0 &&
-          allMemos.map((memo, index) => {
-            return (
-              <div className="memo">
-                <p>{memo.name}</p>
-                {
-                  memo.images.map((image, index) => {
-                    return <img src={image} alt="" />;
-                  })
-                }
-                <Link to={`/edit/${memo.id}`} className={sessionStorage.getItem("sessionId") && JSON.parse(sessionStorage.getItem("sessionId")).memoId == memo.id ? "no-edit" : ""}>EDIT</Link>
-                <button onClick={() => handleDeleteMemo(memo.id)}>DELETE</button>
-                <Link to={`/game/${memo.id}`}>PLAY</Link>
-              </div>
-            );
-          })}
-      </div>
+    <div>
+      {allMemos.length ? (
+        <div className="select">
+          <Nav />
+          <div className="memos">
+            {allMemos.length > 0 &&
+              allMemos.map((memo, index) => {
+                return (
+                  <div className="memo">
+                    <h2>
+                      {memo.name.charAt(0).toUpperCase() + memo.name.slice(1)}
+                    </h2>
+                    <div className="images">
+                      {memo.images.slice(0, 4).map((image, index) => {
+                        if (index === 3) {
+                          return (
+                            <div className="last-image">
+                              <img src={image} alt="" />
+                              <p>+{memo.images.length - 4}</p>
+                            </div>
+                          );
+                        } else {
+                          return <img src={image} alt="" />;
+                        }
+                      })}
+                    </div>
+                    <div className="buttons">
+                      <Link
+                        to={`/edit/${memo.id}`}
+                        className={
+                          sessionStorage.getItem("sessionId") &&
+                          JSON.parse(sessionStorage.getItem("sessionId"))
+                            .memoId == memo.id
+                            ? "no-edit"
+                            : ""
+                        }
+                      >
+                        EDIT
+                        <p className={
+                          sessionStorage.getItem("sessionId") &&
+                          JSON.parse(sessionStorage.getItem("sessionId"))
+                            .memoId == memo.id
+                            ? "no-edit"
+                            : "hidden"
+                        }>Edit not allowed session in progress</p>
+                      </Link>
+                      <a onClick={() => handleDeleteMemo(memo.id)}>DELETE</a>
+                      <Link to={`/game/${memo.id}`}>PLAY</Link>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
+      ) : (
+        <Loader />
+      )}
     </div>
   );
 };

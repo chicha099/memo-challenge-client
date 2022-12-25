@@ -51,7 +51,7 @@ const Card = (params) => {
         id="card"
         ref={activeCardRef}
       >
-        <div className="card__face card__face--front">{params.number + 1}</div>
+        <div className="card__face card__face--front"><p>{params.number + 1}</p><p className="flip">↶</p></div>
         <div className="card__face card__face--back">
           <img src={params.image} alt="" />
         </div>

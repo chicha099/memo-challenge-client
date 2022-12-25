@@ -3,7 +3,7 @@ import Cards from "../Cards";
 import "./game.css";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   createSession,
   emptyCompletedPairs,
@@ -13,6 +13,8 @@ import {
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { deleteSession } from "../../Redux/actions";
+import { areEqual } from "../../Helpers";
+import Loader from "../Loader";
 const Game = () => {
   const { id } = useParams();
   const history = useHistory();
@@ -20,12 +22,24 @@ const Game = () => {
   const selectedMemo = useSelector((state) => state.selectedMemo);
   const completedPairs = useSelector((state) => state.completedPairs);
   const currentSession = useSelector((state) => state.currentSession);
+  const [completedMemo, setCompletedMemo] = useState(false);
   const [score, setScore] = useState(0);
   const [showModal, setShowModal] = useState(false);
-
+  const scoreMessages = {
+    100: "Perfect!",
+    90: "Great!",
+    80: "Good!",
+    70: "Not bad!",
+    60: "Not so good!",
+    50: "You can do better!",
+    40: "At least you tried!",
+    30: "Are you even trying?",
+    20: "You are not trying at all!",
+    10: "Try with your eyes open!",
+  };
   useEffect(() => {
     dispatch(getMemoById(id));
-    console.log(selectedMemo, completedPairs)
+    console.log(selectedMemo, completedPairs, currentSession);
   }, []);
 
   useEffect(() => {
@@ -45,27 +59,24 @@ const Game = () => {
   }, [selectedMemo]);
 
   useEffect(() => {
+    setScore(
+      Math.floor((currentSession.numberOfPairs / currentSession.retries) * 100)
+    );
     if (selectedMemo.images) {
+      console.log(completedPairs, selectedMemo);
       if (
         completedPairs.length &&
-        completedPairs.length === selectedMemo.images.length
+        completedPairs.length === selectedMemo.images.length &&
+        areEqual(selectedMemo.images, completedPairs)
       ) {
         setTimeout(() => {
-          alert(
-            "You win!" +
-              " " +
-              "Your score is: " +
-              Math.floor(
-                (currentSession.numberOfPairs / (currentSession.retries + 1)) *
-                  100
-              )
-          );
+          setCompletedMemo(true);
+
           dispatch(
             deleteSession(JSON.parse(sessionStorage.getItem("sessionId")).id)
           );
           dispatch(emptyCompletedPairs());
           sessionStorage.removeItem("sessionId");
-          history.push("/");
         }, 1000);
       }
     }
@@ -73,7 +84,7 @@ const Game = () => {
   const handleModal = (option) => {
     if (option) {
       dispatch(createSession(selectedMemo));
-      dispatch(emptyCompletedPairs())
+      dispatch(emptyCompletedPairs());
       setShowModal(false);
     } else {
       setShowModal(false);
@@ -82,22 +93,39 @@ const Game = () => {
   };
 
   return (
-    <div className="game">
-      {showModal ? (
-        <div className="modalSession">
-          <div className="whiteModal">
-            <p>
-              You already have an uncompleted memo test session in progress, if
-              you continue you will lose your progress
-            </p>
-            <div className="buttons">
-              <button onClick={() => handleModal(false)}>Cancel</button>
-              <button onClick={() => handleModal(true)}>Accept</button>
+    <div>
+      {selectedMemo.images ? (
+        <div className="game">
+          {completedMemo ? (
+            <div className="modalSession">
+              <div className="whiteModal">
+                <h2>{scoreMessages[Math.ceil(score / 10) * 10]}</h2>
+                <p>Score: {score}</p>
+                <Link to="/">
+                  <button>Go to Menu</button>
+                </Link>
+              </div>
             </div>
-          </div>
+          ) : null}
+          {showModal ? (
+            <div className="modalSession">
+              <div className="whiteModal">
+                <h2>
+                  You already have a session in progress for, do you want to
+                  start a new one and lose your progress?
+                </h2>
+                <div className="buttons">
+                  <button onClick={() => handleModal(false)}>Cancel</button>
+                  <button onClick={() => handleModal(true)}>Accept</button>
+                </div>
+              </div>
+            </div>
+          ) : null}
+          <Cards />
         </div>
-      ) : null}
-      <Cards />
+      ) : (
+        <Loader />
+      )}
     </div>
   );
 };

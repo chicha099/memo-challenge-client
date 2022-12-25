@@ -9,21 +9,19 @@ const Menu = () => {
     <div className="menu">
       <div>
         <h1>Memo Test Challenge</h1>
-        {sessionStorage.getItem("sessionId") ? (
-          <Link
-            to={`/game/${
-              JSON.parse(sessionStorage.getItem("sessionId")).memoId
-            }`}
-          >
-            <button>Resume Memo Test</button>
-          </Link>
-        ) : null}
-        <Link to="/select">
-          <button>Select Memo Test</button>
-        </Link>
-        <Link to="/create">
-          <button>Create Memo Test</button>
-        </Link>
+        <div className="buttons">
+          {sessionStorage.getItem("sessionId") ? (
+            <Link
+              to={`/game/${
+                JSON.parse(sessionStorage.getItem("sessionId")).memoId
+              }`}
+            >
+              Resume Memo Test
+            </Link>
+          ) : null}
+          <Link to="/select">Select Memo Test</Link>
+          <Link to="/create">Create Memo Test</Link>
+        </div>
       </div>
     </div>
   );

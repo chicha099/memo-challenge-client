@@ -1,27 +1,101 @@
 .select {
-  background-color: beige;
+  background-color: #ffffff;
   height: 100vh;
   display: flex;
+  flex-direction: column;
 }
 .memos {
   display: flex;
-  justify-content: space-around;
-  width: 70%;
+  width: 90%;
   margin: auto;
+  column-gap: 20px;
+  row-gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding-top: 50px;
+  padding-bottom: 100px;
 }
 .memo {
-  border: 2px solid black;
+  box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px,
+    rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
   height: auto;
-  width: 30%;
+  width: 310px;
+  max-width: 615px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
 }
 
 .memo img {
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   object-fit: cover;
+  border-radius: 5px;
 }
 
 .no-edit {
   pointer-events: none;
   color: grey;
+  filter: opacity(0.5);
+  display: block;
+}
+
+.no-edit p {
+  filter: opacity(1);
+}
+ 
+.hidden {
+  display: none;
+}
+.images {
+  display: flex;
+  column-gap: 5px;
+  row-gap: 5px;
+  margin: auto;
+  flex-wrap: wrap;
+  margin-top: 0px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  margin: auto;
+  margin-bottom: 0px;
+}
+
+.buttons a {
+  cursor: pointer;
+}
+
+.memo h2 {
+  font-size: 30px;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+  margin-bottom: 30px;
+  margin-top: 10px;
+}
+
+.last-image {
+  position: relative;
+}
+
+.last-image p {
+  position: absolute;
+  top: 49%;
+  border-radius: 5px;
+  display: flex;
+  color: whitesmoke;
+  justify-content: center;
+  align-items: center;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 60px;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: brightness(0.5) blur(1px);
+  /* backdrop-filter: blur(1px); */
 }
